@@ -30,32 +30,22 @@ export const menu = [
       {
         id: 1,
         title: "Surat",
-        url: "/",
+        url: "/Surat",
         icon: "note.svg",
       },
-      {
-        id: 2,
-        title: "Forms",
-        url: "/",
-        icon: "form.svg",
-      },
+
     ],
   },
   {
     id: 4,
     title: "Maintenance",
     listItems: [
+      
       {
         id: 1,
-        title: "Settings",
-        url: "/",
-        icon: "setting.svg",
-      },
-      {
-        id: 2,
         title: "Log Out",
         url: "/",
-        icon: "",
+        icon: "power.svg",
       },
     ],
   },
@@ -65,19 +55,12 @@ export const userRows = [
   {
     id: 1,
     img: "https://cdn-icons-png.flaticon.com/512/1077/1077114.png",
-    name: "Tamie Astuti",
-    email: "none@gmail.com",
-    department: "Direktur Administrasi & Keuangan",
-  },
-  {
-    id: 2,
-    img: "https://cdn-icons-png.flaticon.com/512/1077/1077114.png",
     name: "Kusino",
     email: "none@gmail.com",
     department: "Manager Divisi Pengadaan",
   },
   {
-    id: 3,
+    id: 2,
     img: "https://cdn-icons-png.flaticon.com/512/1077/1077114.png",
     name: "Novita",
     email: "none@gmail.com",

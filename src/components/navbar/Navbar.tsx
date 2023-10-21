@@ -1,8 +1,11 @@
+import { Navigate, useNavigate } from "react-router-dom"
 import "./navbar.scss"
 
 const Navbar = () => {
+    const navigate=useNavigate()
     return (
         <div className="navbar">
+            <button onClick={()=>navigate('/login')}>Log In</button>
             <div className="logo">
                 <img src="logo.svg" alt="" />
                 <span>App Surat</span>

@@ -8,16 +8,16 @@ import { useState } from "react";
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
-        field: 'nomorSurat',
-        type: 'string',
-        headerName: 'Nomor Surat',
-        width: 100,
-    },
-    {
         field: 'tanggal',
         type: 'string',
         headerName: 'Tanggal',
-        width: 200,
+        width: 100,
+    },
+    {
+        field: 'nomorSurat',
+        type: 'string',
+        headerName: 'Nomor Surat',
+        width: 150,
     },
     {
         field: 'perihal',
