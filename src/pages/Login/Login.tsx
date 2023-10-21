@@ -2,7 +2,6 @@ import "./login.scss";
 
 import { Button, Form, Input, Typography, notification } from "antd";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 
 import { login } from "../../lib/pocketbase";
 
@@ -14,7 +13,6 @@ type FieldType = {
 
 export default function Login() {
   const [api, contextHolder] = notification.useNotification();
-  const navigate = useNavigate();
 
   const { mutateAsync, isLoading } = useMutation({
     mutationFn: login,
@@ -23,7 +21,7 @@ export default function Login() {
   const onFinish = async (values: any) => {
     try {
       await mutateAsync({ ...values });
-      navigate("/");
+      window.location.reload();
     } catch (error) {
       api.open({
         message: "Gagal",

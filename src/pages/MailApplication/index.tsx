@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Flex,
   Typography,
@@ -8,18 +9,14 @@ import {
   Modal,
   Form,
   DatePicker,
+  notification,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-
 import type { ColumnsType } from "antd/es/table";
-import { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  createMail,
-  getAllMails,
-  userData,
-} from "../../lib/pocketbase";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { createMail, getAllMails, userData } from "../../lib/pocketbase";
 
 interface DataType {
   mailNo: string;
@@ -86,33 +83,44 @@ const columns: ColumnsType<DataType> = [
 
 const MailApplication = () => {
   const [open, setOpen] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
+  const queryClient = useQueryClient();
 
-  const { data } = useQuery({
+  const { isLoading, data } = useQuery({
     queryKey: ["mails"],
     queryFn: getAllMails,
   });
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isLoading: isLoadingCreate } = useMutation({
     mutationFn: createMail,
   });
 
   const onFinish = async (values: FieldType) => {
-    const formData = {
-      mailNo: values.mailNo,
-      summary: values.summary,
-      date: values.date.format(),
-      approver: userData?.supervisor,
-      status: "pending",
-      creator: userData?.id,
-      baseMail: values.baseMail,
-    };
+    try {
+      const formData = {
+        mailNo: values.mailNo,
+        summary: values.summary,
+        date: values.date.format(),
+        approver: userData?.supervisor,
+        status: "pending",
+        creator: userData?.id,
+        baseMail: values.baseMail,
+      };
+      await mutateAsync(formData);
+      queryClient.invalidateQueries({ queryKey: ["mails"] });
 
-    console.log(userData, formData);
-    mutateAsync(formData);
+      setOpen(false);
+    } catch (error) {
+      api.open({
+        message: "Gagal",
+        description: "Kamu gagal masuk",
+      });
+    }
   };
 
   return (
     <Flex vertical>
+      {contextHolder}
       <Modal
         title="Tambah Surat"
         centered
@@ -161,7 +169,7 @@ const MailApplication = () => {
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit">
+            <Button loading={isLoadingCreate} type="primary" htmlType="submit">
               Tambah Surat
             </Button>
           </Form.Item>
@@ -176,6 +184,7 @@ const MailApplication = () => {
         </Button>
       </Flex>
       <Table
+        loading={isLoading}
         columns={columns}
         dataSource={
           data?.items.map((item) => ({
