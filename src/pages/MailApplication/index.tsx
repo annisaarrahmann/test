@@ -8,7 +8,6 @@ import {
   Modal,
   Form,
   DatePicker,
-  Select,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
@@ -19,7 +18,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createMail,
   getAllMails,
-  getFullMails,
   userData,
 } from "../../lib/pocketbase";
 
@@ -89,7 +87,7 @@ const columns: ColumnsType<DataType> = [
 const MailApplication = () => {
   const [open, setOpen] = useState(false);
 
-  const { isLoading, isError, data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ["mails"],
     queryFn: getAllMails,
   });
