@@ -26,7 +26,7 @@ export const getAllMails = async () => {
 
 export const getAllPendingMails = async () => {
   return await client.collection("mails").getList(1, 50, {
-    filter: `creator='${userData?.id}' && status='pending'`,
+    filter: `approver='${userData?.id}' && status='pending'`,
     sort: "-created",
     expand: "approver",
   });

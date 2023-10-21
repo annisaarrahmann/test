@@ -93,7 +93,7 @@ const MailApproval = () => {
         status: action,
       };
       await mutateAsync(formData);
-      queryClient.invalidateQueries({ queryKey: ["mails"] });
+      queryClient.invalidateQueries({ queryKey: ["pendingmails"] });
     } catch (error) {
       api.open({
         message: "Gagal",
