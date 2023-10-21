@@ -1,7 +1,12 @@
 import "./styles/global.scss";
 
 import { useState } from "react";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  Link,
+} from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import {
@@ -28,7 +33,10 @@ import {
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import ProtectedRoute from "./components/protectedPage";
-import { signout } from "./lib/pocketbase";
+
+import { signout, userData } from "./lib/pocketbase";
+import MailApplication from "./pages/MailApplication";
+import MailApproval from "./pages/MailApproval";
 
 const queryClient = new QueryClient();
 
@@ -58,28 +66,27 @@ function MainApp() {
           <Layout>
             <Sider trigger={null} collapsible collapsed={collapsed}>
               <div className="main-logo">
-                <img src="logo.svg" alt="" />
+                <img src="/logo.svg" alt="" />
                 {!collapsed ? <span>App Surat</span> : null}
               </div>
               <Menu
                 theme="dark"
                 mode="inline"
-                defaultSelectedKeys={["1"]}
                 items={[
                   {
                     key: "1",
                     icon: <HomeOutlined />,
-                    label: "Beranda",
+                    label: <Link to="/">Beranda</Link>,
                   },
                   {
                     key: "2",
                     icon: <FileTextOutlined />,
-                    label: "Pengajuan Surat",
+                    label: <Link to="/mail/application">Pengajuan Surat</Link>,
                   },
                   {
                     key: "3",
                     icon: <FileDoneOutlined />,
-                    label: "Pengesahan Surat",
+                    label: <Link to="/mail/approval">Persetujuan Surat</Link>,
                   },
                 ]}
               />
@@ -106,7 +113,7 @@ function MainApp() {
                   <Dropdown menu={{ items }} placement="bottomLeft">
                     <Flex gap="small" align="center">
                       <Avatar icon={<UserOutlined />} />
-                      <Typography.Text>Naufal Zhafran</Typography.Text>
+                      <Typography.Text>{userData?.name}</Typography.Text>
                     </Flex>
                   </Dropdown>
                 </Flex>
@@ -139,6 +146,14 @@ function MainApp() {
         {
           path: "/",
           element: <Home />,
+        },
+        {
+          path: "/mail/application",
+          element: <MailApplication />,
+        },
+        {
+          path: "/mail/approval",
+          element: <MailApproval />,
         },
       ],
     },

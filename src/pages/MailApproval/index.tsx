@@ -1,15 +1,13 @@
 import { Flex, Typography } from "antd";
 
-import "./home.scss";
-
-const Home = () => {
+const MailApproval = () => {
   return (
     <Flex>
       <Typography.Title level={2}>
-        Beranda
+        Persetujuan Surat
       </Typography.Title>
     </Flex>
   );
 };
 
-export default Home;
+export default MailApproval;
