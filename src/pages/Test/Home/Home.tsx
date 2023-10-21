@@ -1,4 +1,4 @@
-import TopBox from "../../components/topBox/TopBox";
+import TopBox from "../../../components/topBox/TopBox";
 import "./home.scss";
 
 const Home = () => {

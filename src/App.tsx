@@ -25,8 +25,8 @@ import {
   Typography,
 } from "antd";
 
-import Home from "./pages/Home/Home";
-import Login from "./pages/Login/Login";
+import Home from "./pages/Test/Home/Home";
+import Login from "./pages/Test/Login/Login";
 import ProtectedRoute from "./components/protectedPage";
 import { signout } from "./lib/pocketbase";
 
