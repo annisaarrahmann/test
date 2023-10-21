@@ -4,7 +4,7 @@ import { Button, Form, Input, Typography, notification } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import { login } from "../../../lib/pocketbase";
+import { login } from "../../lib/pocketbase";
 
 type FieldType = {
   username?: string;
