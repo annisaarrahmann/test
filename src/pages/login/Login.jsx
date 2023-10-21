@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { login } from '../../lib/pocketbase';
 import { useNavigate } from 'react-router-dom';
+import "./login.scss"
 
 export default function Login() {
   const [username, setUsername] = useState(null);
@@ -15,18 +16,19 @@ export default function Login() {
     navigate('/')
   }
   return (
-    <>
+    <div className='login'>
+        <img src="https://pindad-enjiniring.com/wp-content/uploads/2022/02/PEI-pindad-new1.png" alt="" className="icons" />
       <h2>Log In As Existing User</h2>
-      <div className='grid gap-6 mt-4 text-base'>
+      <div className='input'>
         <input className='text-input' type='text' placeholder='Username' onChange={(e) => setUsername(e.target.value)} required />
         <input className='text-input text-base' onChange={(e) => setPassword(e.target.value)} type='password' placeholder='Password' />
       </div>
-        <button className='bg-green-500 text-white py-2 px-4 rounded-md text-base mt-6' onClick={handleSubmit}>
+        <button className='loginContinue' onClick={handleSubmit}>
           <div className='flex'>
-            <span class='material-symbols-outlined -ml-2'>login</span>
-            <p className='text-base ml-2'>Continue</p>
+            <span class='info'>Login</span>
+            <p className='continue'>Continue</p>
           </div>
         </button>
-    </>
+    </div>
   )
 }
