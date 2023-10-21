@@ -24,8 +24,20 @@ export const getAllMails = async () => {
   });
 };
 
+export const getAllPendingMails = async () => {
+  return await client.collection("mails").getList(1, 50, {
+    filter: `creator='${userData?.id}' && status='pending'`,
+    sort: "-created",
+    expand: "approver",
+  });
+};
+
 export const createMail = async (data: any) => {
   return await client.collection("mails").create(data);
+};
+
+export const updateMail = async (data: any) => {
+  return await client.collection("mails").update(data.id, data);
 };
 
 export const signout = () => {
