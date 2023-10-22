@@ -53,6 +53,32 @@ const items: MenuProps["items"] = [
   },
 ];
 
+const MENU_APPROVER = [
+  {
+    key: "1",
+    icon: <HomeOutlined />,
+    label: <Link to="/">Beranda</Link>,
+  },
+  {
+    key: "3",
+    icon: <FileDoneOutlined />,
+    label: <Link to="/mail/approval">Persetujuan Surat</Link>,
+  },
+];
+
+const MENU_REQUESTER = [
+  {
+    key: "1",
+    icon: <HomeOutlined />,
+    label: <Link to="/">Beranda</Link>,
+  },
+  {
+    key: "2",
+    icon: <FileTextOutlined />,
+    label: <Link to="/mail/application">Pengajuan Surat</Link>,
+  },
+];
+
 function MainApp() {
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -71,23 +97,9 @@ function MainApp() {
             <Menu
               theme="dark"
               mode="inline"
-              items={[
-                {
-                  key: "1",
-                  icon: <HomeOutlined />,
-                  label: <Link to="/">Beranda</Link>,
-                },
-                {
-                  key: "2",
-                  icon: <FileTextOutlined />,
-                  label: <Link to="/mail/application">Pengajuan Surat</Link>,
-                },
-                {
-                  key: "3",
-                  icon: <FileDoneOutlined />,
-                  label: <Link to="/mail/approval">Persetujuan Surat</Link>,
-                },
-              ]}
+              items={
+                userData?.role === "approver" ? MENU_APPROVER : MENU_REQUESTER
+              }
             />
           </Sider>
 
