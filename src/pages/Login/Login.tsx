@@ -23,7 +23,7 @@ export default function Login() {
       await mutateAsync({ ...values });
       window.location.reload();
     } catch (error) {
-      api.open({
+      api.error({
         message: "Gagal",
         description: "Kamu gagal masuk",
       });
@@ -39,7 +39,9 @@ export default function Login() {
         className="icons"
       />
 
-      <Typography.Title level={2}>Log In As Existing User</Typography.Title>
+      <Typography.Title level={2}>
+        Aplikasi Surat Internal Departement Pengadaan
+      </Typography.Title>
 
       <Form
         name="basic"
@@ -50,7 +52,7 @@ export default function Login() {
         <Form.Item<FieldType>
           label="Username"
           name="username"
-          rules={[{ required: true, message: "Please input your username!" }]}
+          rules={[{ required: true, message: "Tolong masukkan username dengan benar!" }]}
         >
           <Input />
         </Form.Item>
@@ -58,14 +60,14 @@ export default function Login() {
         <Form.Item<FieldType>
           label="Password"
           name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
+          rules={[{ required: true, message: "Tolong masukkan password dengan benar!" }]}
         >
           <Input.Password />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button loading={isLoading} type="primary" htmlType="submit">
-            Login
+            Masuk
           </Button>
         </Form.Item>
       </Form>

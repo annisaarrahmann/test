@@ -16,6 +16,11 @@ export const login = async ({
   return await client.collection("users").authWithPassword(username, password);
 };
 
+export const getAllMailsCount = async () => {
+  return await client.collection("mails").getList(1, 50);
+};
+
+
 export const getAllMails = async () => {
   return await client.collection("mails").getList(1, 50, {
     filter: `creator='${userData?.id}'`,

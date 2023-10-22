@@ -111,9 +111,9 @@ const MailApplication = () => {
 
       setOpen(false);
     } catch (error) {
-      api.open({
+      api.error({
         message: "Gagal",
-        description: "Kamu gagal masuk",
+        description: "Kamu gagal menambahkan surat",
       });
     }
   };
