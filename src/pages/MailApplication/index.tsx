@@ -10,13 +10,21 @@ import {
   Form,
   DatePicker,
   notification,
+  Select,
+  Upload,
+  Space,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { createMail, getAllMails, userData } from "../../lib/pocketbase";
+import {
+  createMail,
+  getAllMails,
+  getURL,
+  userData,
+} from "../../lib/pocketbase";
 
 interface DataType {
   mailNo: string;
@@ -25,6 +33,7 @@ interface DataType {
   otherMail: string;
   status: string;
   approver: string;
+  mail_file: string;
 }
 
 type FieldType = {
@@ -33,6 +42,8 @@ type FieldType = {
   date?: any;
   baseMail?: string;
   approver?: string;
+  reciever?: string;
+  mail_file: { file: File };
 };
 
 const columns: ColumnsType<DataType> = [
@@ -75,9 +86,27 @@ const columns: ColumnsType<DataType> = [
     },
   },
   {
-    title: "Tujuan",
+    title: "Persetujuan",
     dataIndex: "approver",
     key: "approver",
+  },
+  {
+    title: "Tujuan",
+    dataIndex: "reciever",
+    key: "reciever",
+  },
+
+  {
+    title: "Action",
+    width: 150,
+    fixed: "right",
+    render: (_, record) => (
+      <Space>
+        <Typography.Link href={getURL(record, record.mail_file)}>
+          Download
+        </Typography.Link>
+      </Space>
+    ),
   },
 ];
 
@@ -97,15 +126,42 @@ const MailApplication = () => {
 
   const onFinish = async (values: FieldType) => {
     try {
-      const formData = {
-        mailNo: values.mailNo,
-        summary: values.summary,
-        date: values.date.format(),
-        approver: userData?.supervisor,
-        status: "pending",
-        creator: userData?.id,
-        baseMail: values.baseMail,
-      };
+      const formData = new FormData();
+
+      formData.append("status", "pending");
+
+      if (values.mailNo) {
+        formData.append("mailNo", values.mailNo);
+      }
+
+      if (values.summary) {
+        formData.append("summary", values.summary);
+      }
+
+      if (values.date) {
+        formData.append("date", values.date.format());
+      }
+
+      if (userData?.supervisor) {
+        formData.append("approver", userData?.supervisor);
+      }
+
+      if (userData?.id) {
+        formData.append("creator", userData?.id);
+      }
+
+      if (values.baseMail) {
+        formData.append("baseMail", values.baseMail);
+      }
+
+      if (values.mail_file) {
+        formData.append("mail_file", values.mail_file.file);
+      }
+
+      if (values.reciever) {
+        formData.append("reciever", values.reciever);
+      }
+
       await mutateAsync(formData);
       queryClient.invalidateQueries({ queryKey: ["mails"] });
 
@@ -153,6 +209,25 @@ const MailApplication = () => {
           </Form.Item>
 
           <Form.Item<FieldType>
+            label="Tujuan"
+            name="reciever"
+            rules={[
+              { required: true, message: "Tolong masukkan tujuan surat" },
+            ]}
+          >
+            <Select
+              options={[
+                { value: "Akuntansi", label: "Akuntansi" },
+                { value: "Pemasaran", label: "Pemasaran" },
+                { value: "SDM", label: "SDM" },
+                { value: "Enjinering", label: "Enjinering" },
+                { value: "Bisreg", label: "Bisreg" },
+                { value: "Perencanaan", label: "Perencanaan" },
+              ]}
+            />
+          </Form.Item>
+
+          <Form.Item<FieldType>
             label="Dasar Surat"
             name="baseMail"
             rules={[{ required: true, message: "Tolong masukkan nomor surat" }]}
@@ -166,6 +241,12 @@ const MailApplication = () => {
             rules={[{ required: true, message: "Tolong masukkan perihal" }]}
           >
             <TextArea rows={4} />
+          </Form.Item>
+
+          <Form.Item label="Upload" name="mail_file">
+            <Upload maxCount={1} beforeUpload={() => false}>
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

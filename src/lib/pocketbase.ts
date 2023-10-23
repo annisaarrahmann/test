@@ -20,7 +20,6 @@ export const getAllMailsCount = async () => {
   return await client.collection("mails").getList(1, 50);
 };
 
-
 export const getAllMails = async () => {
   return await client.collection("mails").getList(1, 50, {
     filter: `creator='${userData?.id}'`,
@@ -47,4 +46,8 @@ export const updateMail = async (data: any) => {
 
 export const signout = () => {
   client.authStore.clear();
+};
+
+export const getURL = (record: any, data: any) => {
+  return client.files.getUrl(record, data);
 };
