@@ -90,19 +90,31 @@ const Home = () => {
         <Col span={12}>
           <Card bordered={false}>
             <Statistic
-              title="Jumlah Surat Internal"
+              title="Total Surat Internal"
               value={dataAllMails?.totalItems}
             />
           </Card>
         </Col>
-        <Col span={12}>
-          <Card bordered={false}>
-            <Statistic
-              title="Jumlah Surat Yang Perlu Disetujui"
-              value={dataPendingMails?.totalItems}
-            />
-          </Card>
-        </Col>
+
+        {userData?.departement !== "Pengadaan" ? (
+          <Col span={12}>
+            <Card bordered={false}>
+              <Statistic
+                title="Total Surat Yang Perlu Disetujui"
+                value={dataPendingMails?.totalItems}
+              />
+            </Card>
+          </Col>
+        ) : (
+          <Col span={12}>
+            <Card bordered={false}>
+              <Statistic
+                title="Total Surat Departemen Anda"
+                value={dataRecievedMails?.totalItems}
+              />
+            </Card>
+          </Col>
+        )}
       </Row>
       {userData?.departement !== "Pengadaan" ? (
         <Table
