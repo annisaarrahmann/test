@@ -28,9 +28,17 @@ export const getAllMails = async () => {
   });
 };
 
+export const getAllRecievedMails = async () => {
+  return await client.collection("mails").getList(1, 50, {
+    filter: `reciever='${userData?.departement}' && status='approve'`,
+    sort: "-created",
+    expand: "approver",
+  });
+};
+
 export const getAllPendingMails = async () => {
   return await client.collection("mails").getList(1, 50, {
-    filter: `approver='${userData?.id}' && status='pending'`,
+    filter: `approver='${userData?.id}' && (status='pending' || status='reject')`,
     sort: "-created",
     expand: "approver",
   });

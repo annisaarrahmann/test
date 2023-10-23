@@ -80,6 +80,14 @@ const MENU_REQUESTER = [
   },
 ];
 
+const MENU_VIEWER = [
+  {
+    key: "1",
+    icon: <HomeOutlined />,
+    label: <Link to="/">Beranda</Link>,
+  },
+];
+
 function MainApp() {
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -99,7 +107,7 @@ function MainApp() {
               theme="dark"
               mode="inline"
               items={
-                userData?.role === "approver" ? MENU_APPROVER : MENU_REQUESTER
+                userData?.role === "approver" ? MENU_APPROVER :  userData?.role === "requester" ? MENU_REQUESTER : MENU_VIEWER
               }
             />
           </Sider>

@@ -40,6 +40,11 @@ const columns: (onAction: any) => ColumnsType<DataType> = (onAction) => [
     key: "date",
   },
   {
+    title: "Tujuan",
+    dataIndex: "reciever",
+    key: "reciever",
+  },
+  {
     title: "Dasar Surat",
     dataIndex: "baseMail",
     key: "baseMail",
@@ -71,16 +76,11 @@ const columns: (onAction: any) => ColumnsType<DataType> = (onAction) => [
           <Button onClick={() => onAction(record, "reject")}>Tolak</Button>
           <Button>
             <Typography.Link href={getURL(record, record.mail_file)}>
-              Download
+              Unduh
             </Typography.Link>
           </Button>
         </Space>
       ) : null,
-  },
-  {
-    title: "Tujuan",
-    dataIndex: "reciever",
-    key: "reciever",
   },
 ];
 

@@ -103,7 +103,7 @@ const columns: ColumnsType<DataType> = [
     render: (_, record) => (
       <Space>
         <Typography.Link href={getURL(record, record.mail_file)}>
-          <Button>Download</Button>
+          <Button>Unduh</Button>
         </Typography.Link>
       </Space>
     ),
