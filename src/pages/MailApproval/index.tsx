@@ -10,7 +10,7 @@ import {
 import type { ColumnsType } from "antd/es/table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getAllPendingMails, updateMail } from "../../lib/pocketbase";
+import { getAllPendingMails, getURL, updateMail } from "../../lib/pocketbase";
 
 interface DataType {
   mailNo: string;
@@ -19,6 +19,7 @@ interface DataType {
   otherMail: string;
   status: string;
   approver: string;
+  mail_file: string;
 }
 
 const columns: (onAction: any) => ColumnsType<DataType> = (onAction) => [
@@ -68,8 +69,18 @@ const columns: (onAction: any) => ColumnsType<DataType> = (onAction) => [
         <Space>
           <Button onClick={() => onAction(record, "approve")}>Setujui</Button>
           <Button onClick={() => onAction(record, "reject")}>Tolak</Button>
+          <Button>
+            <Typography.Link href={getURL(record, record.mail_file)}>
+              Download
+            </Typography.Link>
+          </Button>
         </Space>
       ) : null,
+  },
+  {
+    title: "Tujuan",
+    dataIndex: "reciever",
+    key: "reciever",
   },
 ];
 
