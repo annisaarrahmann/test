@@ -38,7 +38,7 @@ export const getAllRecievedMails = async () => {
 
 export const getAllPendingMails = async () => {
   return await client.collection("mails").getList(1, 50, {
-    filter: `approver='${userData?.id}' && (status='pending' || status='reject')`,
+    filter: `approver='${userData?.id}' && (status='pending')`,
     sort: "-created",
     expand: "approver",
   });

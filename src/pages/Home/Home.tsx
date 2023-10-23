@@ -6,7 +6,6 @@ import {
   Statistic,
   Table,
   Typography,
-  Tag,
   Button,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
