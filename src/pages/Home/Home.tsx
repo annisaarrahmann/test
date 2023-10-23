@@ -96,7 +96,7 @@ const Home = () => {
           </Card>
         </Col>
 
-        {userData?.departement !== "Pengadaan" ? (
+        {userData?.departement === "Pengadaan" ? (
           <Col span={12}>
             <Card bordered={false}>
               <Statistic
