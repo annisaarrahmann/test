@@ -40,7 +40,7 @@ export default function Login() {
       />
 
       <Typography.Title level={2}>
-        Aplikasi Surat Internal Departement Pengadaan
+        Sistem Informasi Korespondensi Internal Departement Pengadaan
       </Typography.Title>
 
       <Form
