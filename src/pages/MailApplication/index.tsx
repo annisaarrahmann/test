@@ -86,6 +86,12 @@ const columns: ColumnsType<DataType> = [
     },
   },
   {
+    title: "Alasan Ditolak",
+    dataIndex: "rejected_comment",
+    key: "rejected_comment",
+    render: (val) => (val ? val : "-"),
+  },
+  {
     title: "Persetujuan",
     dataIndex: "approver",
     key: "approver",

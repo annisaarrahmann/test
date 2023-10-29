@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Flex,
   Typography,
@@ -6,6 +7,9 @@ import {
   Button,
   notification,
   Space,
+  Modal,
+  Form,
+  Input,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -21,6 +25,10 @@ interface DataType {
   approver: string;
   mail_file: string;
 }
+
+type FieldType = {
+  rejected_comment?: string;
+};
 
 const columns: (onAction: any) => ColumnsType<DataType> = (onAction) => [
   {
@@ -87,6 +95,12 @@ const columns: (onAction: any) => ColumnsType<DataType> = (onAction) => [
 const MailApproval = () => {
   const [api, contextHolder] = notification.useNotification();
   const queryClient = useQueryClient();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<any>({});
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const { isLoading, data } = useQuery({
     queryKey: ["pendingmails"],
@@ -98,6 +112,12 @@ const MailApproval = () => {
   });
 
   const onAction = async (values: any, action: string) => {
+    if (action === "reject") {
+      setIsModalOpen(true);
+      setModalData(values);
+      return;
+    }
+
     try {
       const formData = {
         id: values.id,
@@ -113,9 +133,56 @@ const MailApproval = () => {
     }
   };
 
+  const onFinish = async (value: any) => {
+    try {
+      const formData = {
+        id: modalData.id,
+        status: "reject",
+        rejected_comment: value.rejected_comment,
+      };
+      await mutateAsync(formData);
+      queryClient.invalidateQueries({ queryKey: ["pendingmails"] });
+    } catch (error) {
+      api.open({
+        message: "Gagal",
+        description: "Aksi gagal dilakukan",
+      });
+    } finally {
+      setIsModalOpen(false);
+    }
+  };
+
   return (
     <Flex vertical>
       {contextHolder}
+
+      <Modal
+        title="Tolak"
+        centered
+        open={isModalOpen}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        <Form
+          name="basic"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          layout="vertical"
+        >
+          <Form.Item<FieldType>
+            label="Alasan Menolak"
+            name="rejected_comment"
+            rules={[{ required: true, message: "Tolong masukkan alasan menolak" }]}
+          >
+            <Input.TextArea rows={4} />
+          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button loading={isLoadingAction} type="primary" htmlType="submit">
+              Tolak Surat
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
 
       <Flex gap="small" justify="space-between">
         <Typography.Title level={2}>Persetujuan Surat</Typography.Title>
