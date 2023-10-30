@@ -23,8 +23,10 @@ import {
   createMail,
   getAllMails,
   getURL,
+  updateMail,
   userData,
 } from "../../lib/pocketbase";
+import dayjs from "dayjs";
 
 interface DataType {
   mailNo: string;
@@ -37,6 +39,7 @@ interface DataType {
 }
 
 type FieldType = {
+  id?: string;
   mailNo?: string;
   summary?: string;
   date?: any;
@@ -46,7 +49,9 @@ type FieldType = {
   mail_file: { file: File };
 };
 
-const columns: ColumnsType<DataType> = [
+const columns: (onModalOpen: (data: any) => void) => ColumnsType<DataType> = (
+  onModalOpen
+) => [
   {
     title: "No Surat",
     dataIndex: "mailNo",
@@ -111,6 +116,9 @@ const columns: ColumnsType<DataType> = [
         <Typography.Link href={getURL(record, record.mail_file)}>
           <Button>Unduh</Button>
         </Typography.Link>
+        {record.status !== "approve" ? (
+          <Button onClick={() => onModalOpen(record)}>Edit</Button>
+        ) : null}
       </Space>
     ),
   },
@@ -118,8 +126,11 @@ const columns: ColumnsType<DataType> = [
 
 const MailApplication = () => {
   const [open, setOpen] = useState(false);
+  const [modalData, setModalData] = useState<any>({});
+
   const [api, contextHolder] = notification.useNotification();
   const queryClient = useQueryClient();
+  const [form] = Form.useForm();
 
   const { isLoading, data } = useQuery({
     queryKey: ["mails"],
@@ -129,6 +140,12 @@ const MailApplication = () => {
   const { mutateAsync, isLoading: isLoadingCreate } = useMutation({
     mutationFn: createMail,
   });
+
+  const { mutateAsync: mutateUpdate, isLoading: isLoadingUpdate } = useMutation(
+    {
+      mutationFn: updateMail,
+    }
+  );
 
   const onFinish = async (values: FieldType) => {
     try {
@@ -168,7 +185,12 @@ const MailApplication = () => {
         formData.append("reciever", values.reciever);
       }
 
-      await mutateAsync(formData);
+      if (modalData) {
+        await mutateUpdate({ id: modalData.id, ...values, status: "pending" });
+      } else {
+        await mutateAsync(formData);
+      }
+      setModalData(null);
       queryClient.invalidateQueries({ queryKey: ["mails"] });
 
       setOpen(false);
@@ -180,19 +202,31 @@ const MailApplication = () => {
     }
   };
 
+  const onEdit = (data: any) => {
+    console.log(data);
+    setOpen(true);
+    setModalData(data);
+    form.setFieldsValue({ ...data, date: dayjs(data.date) });
+  };
+
   return (
     <Flex vertical>
       {contextHolder}
+
       <Modal
         title="Tambah Surat"
         centered
         open={open}
-        onCancel={() => setOpen(false)}
+        onCancel={() => {
+          setModalData(null);
+          setOpen(false);
+        }}
         footer={null}
       >
         <Form
           name="basic"
           initialValues={{ remember: true }}
+          form={form}
           onFinish={onFinish}
           layout="vertical"
         >
@@ -256,8 +290,12 @@ const MailApplication = () => {
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button loading={isLoadingCreate} type="primary" htmlType="submit">
-              Tambah Surat
+            <Button
+              loading={isLoadingCreate || isLoadingUpdate}
+              type="primary"
+              htmlType="submit"
+            >
+              {modalData ? "Ubah Surat" : "Tambah Surat"}
             </Button>
           </Form.Item>
         </Form>
@@ -265,14 +303,19 @@ const MailApplication = () => {
 
       <Flex gap="small" justify="space-between">
         <Typography.Title level={2}>Pengajuan Surat</Typography.Title>
-        <Button onClick={() => setOpen(true)}>
+        <Button
+          onClick={() => {
+            form.resetFields();
+            setOpen(true);
+          }}
+        >
           <PlusOutlined />
           Tambah Transaksi Surat
         </Button>
       </Flex>
       <Table
         loading={isLoading}
-        columns={columns}
+        columns={columns(onEdit)}
         dataSource={
           data?.items.map((item) => ({
             ...item,
