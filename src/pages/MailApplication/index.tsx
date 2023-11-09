@@ -67,6 +67,8 @@ const columns: (onModalOpen: (data: any) => void) => ColumnsType<DataType> = (
     title: "Tanggal Surat",
     dataIndex: "date",
     key: "date",
+    width: 120,
+    render: (val) => dayjs(val).format("DD-MM-YYYY"),
   },
   {
     title: "Dasar Surat",
@@ -109,8 +111,6 @@ const columns: (onModalOpen: (data: any) => void) => ColumnsType<DataType> = (
 
   {
     title: "Action",
-    width: 150,
-    fixed: "right",
     render: (_, record) => (
       <Space>
         <Typography.Link href={getURL(record, record.mail_file)}>
