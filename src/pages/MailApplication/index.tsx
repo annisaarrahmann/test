@@ -126,7 +126,7 @@ const columns: (onModalOpen: (data: any) => void) => ColumnsType<DataType> = (
 
 const MailApplication = () => {
   const [open, setOpen] = useState(false);
-  const [modalData, setModalData] = useState<any>({});
+  const [modalData, setModalData] = useState<any>(undefined);
 
   const [api, contextHolder] = notification.useNotification();
   const queryClient = useQueryClient();
@@ -203,7 +203,6 @@ const MailApplication = () => {
   };
 
   const onEdit = (data: any) => {
-    console.log(data);
     setOpen(true);
     setModalData(data);
     form.setFieldsValue({ ...data, date: dayjs(data.date) });
@@ -214,11 +213,12 @@ const MailApplication = () => {
       {contextHolder}
 
       <Modal
-        title="Tambah Surat"
+        title={modalData ? "Ubah Surat" : "Tambah Surat"}
         centered
         open={open}
         onCancel={() => {
-          setModalData(null);
+          setModalData(undefined);
+          form.resetFields();
           setOpen(false);
         }}
         footer={null}
